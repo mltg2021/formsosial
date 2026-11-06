@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulir Pengajuan Dana Sosial - PUK FSP-LEM SPSI</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for UI Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & Serif for Official Document Look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Tinos:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        spsiRed: '#DC2626',
+                        spsiBlue: '#1D4ED8',
+                        spsiDarkBlue: '#1E3A8A',
+                        spsiYellow: '#FACC15',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        document: ['Tinos', 'Times New Roman', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles for Print and Document Formatting */
+        @media print {
+            @page {
+                size: legal;
+                margin: 5mm;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+                font-size: 11pt !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            .print-container {
+                box-shadow: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                border: none !important;
+            }
+            /* Ensure checkboxes render clearly */
+            input[type="checkbox"] {
+                -webkit-appearance: none;
+                appearance: none;
+                border: 1px solid #000 !important;
+                width: 14px;
+                height: 14px;
+                display: inline-block;
+                position: relative;
+                vertical-align: middle;
+            }
+            input[type="checkbox"]:checked::after {
+                content: '✓';
+                position: absolute;
+                top: -3px;
+                left: 1px;
+                font-size: 12px;
+                font-weight: bold;
+                color: #000;
+            }
+            /* Preserve underline inputs in print */
+            .print-line-input {
+                border-bottom: 1px solid #000 !important;
+                background: transparent !important;
+            }
+        }
+
+        /* Interactive UI styles */
+        .document-paper {
+            background-color: #ffffff;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+            font-family: 'Arial', 'Helvetica', sans-serif;
+        }
+
+        /* Custom underline inputs to match original printed form style */
+        .dotted-input {
+            border: none;
+            border-bottom: 1px dashed #6b7280;
+            outline: none;
+            background: transparent;
+            width: 100%;
+            padding-bottom: 2px;
+            transition: border-color 0.2s;
+        }
+        .dotted-input:focus {
+            border-bottom: 1.5px solid #1d4ed8;
+        }
+
+        .document-table th, .document-table td {
+            border: 1px solid #333333;
+            padding: 6px 8px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen text-slate-800 antialiased font-sans flex flex-col">
+
+<!-- TOP CONTROL BAR (Non-printable) -->
+<header class="no-print bg-slate-900 text-white sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap justify-between items-center gap-4">
+        <div class="flex items-center space-x-3">
+            <div class="bg-red-600 text-white p-2 rounded-lg font-bold text-lg flex items-center justify-center w-10 h-10">
+                <i class="fa-solid font-bold">PUK</i>
+            </div>
+            <div>
+                <h1 class="font-bold text-base sm:text-lg leading-tight">Sistem Pengajuan Dana Sosial PUK FSP-LEM SPSI</h1>
+                <p class="text-xs text-slate-400">PT. Moon Lion Industries Indonesia</p>
+            </div>
+        </div>
+
+        <div class="flex items-center flex-wrap gap-2">
+            <button onclick="fillDemoData()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs sm:text-sm font-medium rounded-md transition flex items-center gap-1.5">
+                <i class="fa-solid fa-wand-magic-sparkles">header</i> Isi Data Demo
+            </button>
+            <button onclick="resetForm()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-200 text-xs sm:text-sm font-medium rounded-md transition flex items-center gap-1.5">
+                <i class="fa-solid fa-rotate-left"></i> Reset
+            </button>
+            <button onclick="window.print()" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold rounded-md shadow-sm transition flex items-center gap-2">
+                <i class="fa-solid fa-print"></i> Cetak / Export PDF
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- MAIN CONTENT WRAPPER -->
+<main class="flex-1 max-w-5xl w-full mx-auto p-3 sm:p-6 lg:p-8">
+    
+    <!-- INSTRUCTION BANNER (Non-printable) -->
+    <div class="no-print bg-blue-50 border-l-4 border-blue-600 p-4 mb-6 rounded-r-lg shadow-sm flex items-start justify-between">
+        <div class="flex items-start space-x-3">
+            <i class="fa-solid fa-circle-info text-blue-600 text-xl mt-0.5"></i>
+            <div class="text-xs sm:text-sm text-blue-900">
+                <p class="font-semibold">Petunjuk Pengisian Formulir Digital:</p>
+                <p class="mt-0.5">Isi bidang data di bawah ini atau ketik langsung pada lembar formulir. Klik tombol <span class="font-semibold">Cetak / Export PDF</span> untuk mencetak dokumen fisik A4 secara presisi.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DOCUMENT CONTAINER (A4 Form Look) -->
+    <div class="print-container document-paper mx-auto p-6 sm:p-10 rounded-xl max-w-[210mm] min-h-[297mm] text-slate-900 relative">
+        
+        <!-- 1. KOP SURAT / HEADER DOKUMEN -->
+        <div class="border-b-2 border-slate-900 pb-2 mb-3">
+            <div class="grid grid-cols-12 items-center gap-2">
+                
+                <!-- Logo Left: SPSI LEM SVG -->
+                <div class="col-span-2 flex justify-center items-center"> <img src="SPSI1.JPG" alt="LOGO SPSI">
+				
+                </div>
+
+                <!-- Center Text Kop Surat -->
+                <div class="col-span-8 text-center text-slate-900 space-y-0.5">
+                    <h2 class="font-bold text-xs sm:text-sm tracking-wide uppercase">PIMPINAN UNIT KERJA</h2>
+                    <h1 class="font-extrabold text-xs sm:text-sm leading-tight text-red-700 tracking-tight uppercase">FEDERASI SERIKAT PEKERJA LOGAM ELEKTRONIK DAN MESIN</h1>
+                    <h1 class="font-extrabold text-xs sm:text-sm leading-tight text-red-700 tracking-tight uppercase">SERIKAT PEKERJA SELURUH INDONESIA</h1>
+                    <p class="text-[9px] sm:text-[11px] font-bold tracking-tight text-blue-900 leading-none my-0.5">(FEDERATION OF METAL ELECTRONICS AND MACHINE WORKER'S UNION)</p>
+                    <h3 class="font-extrabold text-xs sm:text-sm uppercase text-blue-950">PUK FSP-LEM SPSI</h3>
+                    <p class="font-bold text-[10px] sm:text-xs uppercase">KOTA TANGERANG - BANTEN</p>
+                    <p class="font-black text-xs sm:text-base tracking-wider uppercase">PT. MOON LION INDUSTRIES INDONESIA</p>
+                </div>
+
+                <!-- Logo Right: SPSI SVG -->
+                <div class="col-span-2 flex justify-center items-center"> <img src="SPSI2.JPG" alt="LOGO SPSI">
+                    
+                </div>
+
+            </div>
+
+            <!-- Banner Alamat Sekretariat -->
+            <div class="bg-blue-900 text-white text-center py-1 px-2 mt-2 rounded-sm shadow-sm">
+                <p class="text-[9px] sm:text-[11px] font-bold tracking-tight">
+                    KANTOR SEKRETARIAT : JALAN MANIS RAYA NO. 20, KAWASAN INDUSTRI MANIS, JATIUWUNG KOTA TANGERANG - BANTEN 15136
+                </p>
+            </div>
+        </div>
+
+        <!-- 2. JUDUL FORMULIR -->
+        <div class="text-center my-5">
+            <h2 class="text-base sm:text-xl font-extrabold uppercase tracking-wide text-black border-b-2 border-black inline-block pb-0.5">
+                FORMULIR PENGAJUAN DANA SOSIAL
+            </h2>
+        </div>
+
+        <!-- TANGGAL PENGAJUAN -->
+        <div class="mb-5 flex items-center text-xs sm:text-sm font-semibold">
+            <span class="w-44 text-slate-800">Tanggal Pengajuan</span>
+            <span class="mr-2">:</span>
+            <div class="flex-1 max-w-xs relative">
+                <input type="date" id="tglPengajuan" class="dotted-input text-slate-900 font-medium py-0.5 focus:outline-none" onchange="updatePrintView()">
+            </div>
+        </div>
+
+        <!-- 3. BAGIAN A: DATA KARYAWAN PEMOHON -->
+        <div class="mb-5">
+            <h3 class="font-bold text-xs sm:text-sm uppercase text-black mb-2 flex items-center">
+                A. DATA KARYAWAN PEMOHON
+            </h3>
+            <div class="space-y-2 text-xs sm:text-sm pl-2">
+                <div class="flex items-center">
+                    <label for="namaPemohon" class="w-44 font-semibold text-slate-800">Nama</label>
+                    <span class="mr-2">:</span>
+                    <input type="text" id="namaPemohon" placeholder="Masukkan nama lengkap pemohon" class="dotted-input font-medium text-slate-900 uppercase" oninput="updatePrintView()">
+                </div>
+                <div class="flex items-center">
+                    <label for="nikPemohon" class="w-44 font-semibold text-slate-800">NIK</label>
+                    <span class="mr-2">:</span>
+                    <input type="text" id="nikPemohon" placeholder="Masukkan NIK karyawan" class="dotted-input font-medium text-slate-900" oninput="updatePrintView()">
+                </div>
+                <div class="flex items-center">
+                    <label for="deptPemohon" class="w-44 font-semibold text-slate-800">Bagian / Departemen</label>
+                    <span class="mr-2">:</span>
+                    <input type="text" id="deptPemohon" placeholder="Masukkan Bagian / Departemen" class="dotted-input font-medium text-slate-900" oninput="updatePrintView()">
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. BAGIAN B: DATA KELUARGA KARYAWAN -->
+        <div class="mb-5">
+            <h3 class="font-bold text-xs sm:text-sm uppercase text-black mb-0.5">
+                B. DATA KELUARGA KARYAWAN
+            </h3>
+            <p class="text-[11px] sm:text-xs italic text-slate-600 mb-2 pl-2">
+                (diisi apabila pengajuan berkaitan dengan anggota keluarga)
+            </p>
+            <div class="space-y-2.5 text-xs sm:text-sm pl-2">
+                <div class="flex items-center">
+                    <label for="namaKeluarga" class="w-44 font-semibold text-slate-800">Nama</label>
+                    <span class="mr-2">:</span>
+                    <input type="text" id="namaKeluarga" placeholder="Nama anggota keluarga (jika ada)" class="dotted-input font-medium text-slate-900 uppercase" oninput="updatePrintView()">
+                </div>
+                <div class="flex items-start">
+                    <span class="w-44 font-semibold text-slate-800 pt-0.5">Hubungan Keluarga</span>
+                    <span class="mr-2 pt-0.5">:</span>
+                    <div class="flex-1 space-y-1.5 sm:space-y-0 sm:flex sm:items-center sm:space-x-6">
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="hubunganKeluarga" value="Suami / Istri" class="w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-blue-500" onchange="updatePrintView()">
+                            <span class="ml-2 text-slate-800 font-medium">Suami / Istri</span>
+                        </label>
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="hubunganKeluarga" value="Anak" class="w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-blue-500" onchange="updatePrintView()">
+                            <span class="ml-2 text-slate-800 font-medium">Anak</span>
+                        </label>
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" name="hubunganKeluarga" value="Orang Tua" class="w-4 h-4 rounded border-gray-400 text-blue-600 focus:ring-blue-500" onchange="updatePrintView()">
+                            <span class="ml-2 text-slate-800 font-medium">Orang Tua</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. BAGIAN C: JENIS PENGAJUAN DANA SOSIAL -->
+        <div class="mb-6">
+            <h3 class="font-bold text-xs sm:text-sm uppercase text-black mb-3">
+                C. JENIS PENGAJUAN DANA SOSIAL
+            </h3>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-xs sm:text-sm document-table border-collapse border border-slate-800">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-900 text-center font-bold">
+                            <th class="w-10 py-2"></th>
+                            <th class="py-2 text-center uppercase tracking-wider">DESKRIPSI</th>
+                            <th class="w-32 sm:w-36 py-2 text-center uppercase tracking-wider">NOMINAL</th>
+                            <th class="py-2 text-center uppercase tracking-wider">LAMPIRAN</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800 text-slate-900">
+                        <!-- Row 1 -->
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="text-center align-middle">
+                                <input type="checkbox" id="item1" data-nominal="500000" class="w-4 h-4 cursor-pointer" onchange="calculateTotal()">
+                            </td>
+                            <td class="font-medium">Santunan Karyawan Sakit Rawat Inap</td>
+                            <td class="font-semibold whitespace-nowrap text-right">Rp. 500.000</td>
+                            <td class="text-slate-700">Foto Copy Surat Keterangan Rawat Inap</td>
+                        </tr>
+                        <!-- Row 2 -->
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="text-center align-middle">
+                                <input type="checkbox" id="item2" data-nominal="250000" class="w-4 h-4 cursor-pointer" onchange="calculateTotal()">
+                            </td>
+                            <td class="font-medium">
+                                Santunan Karyawan Sakit Tidak Dirawat
+                            </td>
+                            <td class="font-semibold whitespace-nowrap text-right">Rp. 250.000</td>
+                            <td class="text-slate-700">
+                                Foto Copy Form Cuti Sakit <span class="font-bold italic">(minimal 3 hari)</span>
+                            </td>
+                        </tr>
+                        <!-- Row 3 -->
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="text-center align-middle">
+                                <input type="checkbox" id="item3" data-nominal="300000" class="w-4 h-4 cursor-pointer" onchange="calculateTotal()">
+                            </td>
+                            <td class="font-medium">Santunan Keluarga Karyawan Sakit Rawat Inap</td>
+                            <td class="font-semibold whitespace-nowrap text-right">Rp. 300.000</td>
+                            <td class="text-slate-700">Foto Copy Surat Keterangan Rawat Inap</td>
+                        </tr>
+                        <!-- Row 4 -->
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="text-center align-middle">
+                                <input type="checkbox" id="item4" data-nominal="3500000" class="w-4 h-4 cursor-pointer" onchange="calculateTotal()">
+                            </td>
+                            <td class="font-medium">Santunan Kematian Karyawan</td>
+                            <td class="font-semibold whitespace-nowrap text-right">Rp. 3.500.000</td>
+                            <td class="text-slate-700">Foto Copy Surat Keterangan Kematian</td>
+                        </tr>
+                        <!-- Row 5 -->
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="text-center align-middle">
+                                <input type="checkbox" id="item5" data-nominal="2500000" class="w-4 h-4 cursor-pointer" onchange="calculateTotal()">
+                            </td>
+                            <td class="font-medium">Santunan Kematian Keluarga Karyawan</td>
+                            <td class="font-semibold whitespace-nowrap text-right">Rp. 2.500.000</td>
+                            <td class="text-slate-700">Foto Copy Surat Keterangan Kematian</td>
+                        </tr>
+                        <!-- Row 6 -->
+                        <tr class="hover:bg-slate-50 transition">
+                            <td class="text-center align-middle">
+                                <input type="checkbox" id="item6" data-nominal="2000000" class="w-4 h-4 cursor-pointer" onchange="calculateTotal()">
+                            </td>
+                            <td class="font-medium">Santunan Kematian Orang Tua Kandung Karyawan</td>
+                            <td class="font-semibold whitespace-nowrap text-right">Rp. 2.000.000</td>
+                            <td class="text-slate-700">Foto Copy Surat Keterangan Kematian</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Dynamic Total Display (Non-printable summary box, printable subtle total) -->
+            <div class="mt-3 flex justify-between items-center bg-slate-50 p-2.5 rounded border border-slate-300">
+                <span class="font-semibold text-xs sm:text-sm text-slate-700">Total Pengajuan Dana Sosial Ditagihkan:</span>
+                <span id="totalNominalDisplay" class="font-extrabold text-sm sm:text-base text-blue-900">Rp. 0</span>
+            </div>
+        </div>
+
+        <!-- 6. AREA TANDA TANGAN (SIGNATURE SECTION) -->
+        <div class="mt-5 sm:mt-16 pt-4">
+            <div class="grid grid-cols-4 text-center text-xs sm:text-sm font-medium">
+                <!-- Col 1: Disetujui -->
+                <div class="flex flex-col justify-between h-36 sm:h-40">
+                    <div>
+                        <p class="font-semibold text-slate-900">Disetujui,</p>
+                    </div>
+                    <div>
+                        <div class="border-b border-black w-3/4 mx-auto mb-1"></div>
+                        <p class="font-bold text-slate-900">Ketua PUK</p>
+                    </div>
+                </div>
+
+                <!-- Col 2: Diketahui -->
+                <div class="flex flex-col justify-between h-36 sm:h-40">
+                    <div>
+                        <p class="font-semibold text-slate-900">Diketahui,</p>
+                    </div>
+                    <div>
+                        <div class="border-b border-black w-4/5 mx-auto mb-1"></div>
+                        <p class="font-bold text-slate-900">Sekretaris / Bendahara</p>
+                    </div>
+                </div>
+
+				<!-- Col 3: Diketahui -->
+                <div class="flex flex-col justify-between h-36 sm:h-40">
+                    <div>
+                        <p class="font-semibold text-slate-900">
+                    </div>
+                    <div>
+                        <div class="border-b border-black w-4/5 mx-auto mb-1"></div>
+                        <p class="font-bold text-slate-900">Sie Sosial</p>
+                    </div>
+                </div>
+				
+                <!-- Col 4: Diajukan Oleh -->
+                <div class="flex flex-col justify-between h-36 sm:h-40">
+                    <div>
+                        <p class="font-semibold text-slate-900">Diajukan Oleh,</p>
+                    </div>
+                    <div>
+                        <div class="border-b border-black w-4/5 mx-auto mb-1"></div>
+                        <p class="font-bold text-slate-900">Pengurus PUK / Sie Humas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Document Stamp Info -->
+        <div class="mt-8 text-[10px] text-slate-400 text-center no-print">
+            Dokumen Formulir Resmi PUK FSP-LEM SPSI PT. Moon Lion Industries Indonesia
+        </div>
+    </div>
+
+</main>
+
+<script>
+    // Initialize date on page load
+    window.addEventListener('DOMContentLoaded', () => {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('tglPengajuan').value = today;
+    });
+
+    // Auto calculate nominal total based on selected checkboxes
+    function calculateTotal() {
+        let total = 0;
+        for (let i = 1; i <= 6; i++) {
+            const cb = document.getElementById(`item${i}`);
+            if (cb && cb.checked) {
+                total += parseInt(cb.getAttribute('data-nominal') || '0', 10);
+            }
+        }
+        
+        // Format to IDR Currency
+        const formattedTotal = new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR',
+            maximumFractionDigits: 0
+        }).format(total);
+
+        document.getElementById('totalNominalDisplay').textContent = formattedTotal;
+    }
+
+    // Fill demo sample data into the form
+    function fillDemoData() {
+        document.getElementById('namaPemohon').value = "BUDI SANTOSO";
+        document.getElementById('nikPemohon').value = "MLI-20210889";
+        document.getElementById('deptPemohon').value = "PRODUCTION / STAMPING";
+        
+        document.getElementById('namaKeluarga').value = "SITI RAHMAWATI";
+        
+        // Uncheck all family relations first
+        const hubCheckboxes = document.querySelectorAll('input[name="hubunganKeluarga"]');
+        hubCheckboxes.forEach(cb => cb.checked = false);
+        // Check Suami / Istri
+        if (hubCheckboxes[0]) hubCheckboxes[0].checked = true;
+
+        // Uncheck all benefit items
+        for (let i = 1; i <= 6; i++) {
+            document.getElementById(`item${i}`).checked = false;
+        }
+
+        // Select demo item (e.g., Santunan Keluarga Sakit Rawat Inap)
+        document.getElementById('item3').checked = true;
+
+        calculateTotal();
+    }
+
+    // Reset all form inputs
+    function resetForm() {
+        document.getElementById('namaPemohon').value = "";
+        document.getElementById('nikPemohon').value = "";
+        document.getElementById('deptPemohon').value = "";
+        document.getElementById('namaKeluarga').value = "";
+
+        const hubCheckboxes = document.querySelectorAll('input[name="hubunganKeluarga"]');
+        hubCheckboxes.forEach(cb => cb.checked = false);
+
+        for (let i = 1; i <= 6; i++) {
+            document.getElementById(`item${i}`).checked = false;
+        }
+
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('tglPengajuan').value = today;
+
+        calculateTotal();
+    }
+
+    function updatePrintView() {
+        // Trigger live updates or formatting if required
+    }
+</script>
+
+</body>
+</html>
